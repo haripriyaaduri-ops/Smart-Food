@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Panel - Smart Food</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, button { display: block; margin: 10px 0; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel</h1>
+  <input type="text" id="name" placeholder="Food Name">
+  <input type="number" id="price" placeholder="Price">
+  <input type="number" id="quantity" placeholder="Quantity">
+  <button id="addBtn">Add Food</button>
+  <button id="logoutBtn">Logout</button>
+
+  <script>
+    const token = localStorage.getItem("token");
+    if(!token){
+      alert("Login first!");
+      window.location.href = "login.html";
+    }
+
+    document.getElementById("addBtn").addEventListener("click", () => {
+      const name = document.getElementById("name").value;
+      const price = parseInt(document.getElementById("price").value);
+      const quantity = parseInt(document.getElementById("quantity").value);
+
+      fetch("http://localhost:3000/add-food", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({ name, price, quantity })
+      })
+      .then(res => res.text())
+      .then(msg => alert(msg))
+      .catch(err => console.error(err));
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

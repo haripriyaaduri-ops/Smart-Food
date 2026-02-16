@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Smart Food Dashboard</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    header {
+      background: green;
+      color: white;
+      padding: 15px;
+      font-size: 22px;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      display: inline-block;
+      background: white;
+      width: 200px;
+      margin: 15px;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      margin: 10px 0;
+    }
+
+    button {
+      padding: 8px 15px;
+      background: red;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  🍎 Smart Food Dashboard
+</header>
+
+<div class="container">
+  <h2 id="welcome">Loading...</h2>
+  <div id="foodList"></div>
+  <br>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    window.location.href = "index.html";
+  }
+
+  async function loadDashboard() {
+    const response = await fetch("http://localhost:3000/dashboard-data", {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    if (!response.ok) {
+      localStorage.removeItem("token");
+      window.location.href = "index.html";
+      return;
+    }
+
+    const data = await response.json();
+
+    document.getElementById("welcome").innerText = data.message;
+
+    const foodDiv = document.getElementById("foodList");
+    foodDiv.innerHTML = "";
+
+     data.foodItems.forEach(item => {
+    foodDiv.innerHTML += `
+      <div class="card">
+        <h3>${item.name}</h3>
+        <p>Price: ₹${item.price}</p>
+        <p>Available: ${item.quantity}</p>
+      </div>
+    `;
+  });
+}
+
+  function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "index.html";
+  }
+
+  loadDashboard();
+</script>
+
+</body>
+</html>
