@@ -27,7 +27,7 @@
       const price = parseInt(document.getElementById("price").value);
       const quantity = parseInt(document.getElementById("quantity").value);
 
-      fetch("http://localhost:3000/add-food", {
+      fetch("/add-food", {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

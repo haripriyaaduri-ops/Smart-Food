@@ -5,6 +5,8 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const admin = require("firebase-admin");
 const cors = require("cors");
+const PORT = process.env.PORT || 3000;
+
 
 const app = express();
 app.use(bodyParser.json());
@@ -126,6 +128,7 @@ app.get("/dashboard-data", verifyToken, async (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
+
